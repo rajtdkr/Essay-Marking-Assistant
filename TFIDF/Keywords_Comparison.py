@@ -6,9 +6,9 @@ sys.path.append(os.path.abspath("C:/Users/Raj/Desktop/UWA/Semester 3/Research pr
 
 # Do the import
 from spellchecker import SpellChecker
-from Tokenizer import tokenizer
-from Stopwords_Remover import stopwords_remover
-from Lemmtizer import Lemmaztizer_fn
+from TFIDF import Tokenizer
+from TFIDF import Stopwords_Remover
+from TFIDF import Lemmtizer
 import pandas as pd
 import re
 from sklearn.feature_extraction.text import CountVectorizer
@@ -17,16 +17,16 @@ import numpy as np
 from nltk.corpus import wordnet
 from flashtext import KeywordProcessor
 
-Dataframe_Hewlett_essay = pd.read_excel('C:/Users/Raj/Desktop/UWA/Semester 3/Research project\Playing Around With Dataset/Dataset.xlsx','Sheet1')
-Dataframe_Hewlett_essay_Check = pd.read_excel('C:/Users/Raj/Desktop/UWA/Semester 3/Research project\Playing Around With Dataset/Students_Data.xlsx','Sheet1')
+#Dataframe_Hewlett_essay = pd.read_excel('C:/Users/Raj/Desktop/UWA/Semester 3/Research project\Playing Around With Dataset/Dataset.xlsx','Sheet1')
+#Dataframe_Hewlett_essay_Check = pd.read_excel('C:/Users/Raj/Desktop/UWA/Semester 3/Research project\Playing Around With Dataset/Students_Data.xlsx','Sheet1')
 
 def Preprocessing(Dataframe_Hewlett_essay):
     Dataframe_Hewlett_essay_string = Dataframe_Hewlett_essay.to_string() #Converting DF to string
     Dataframe_Hewlett_essay_string_lower = Dataframe_Hewlett_essay_string.lower() #Converting into lowercase
     Dataframe_Hewlett_essay_string_nospch = re.sub('[;:!*,/$()?]@', '', Dataframe_Hewlett_essay_string_lower) #Removing special Charecters
-    Tokenwords = tokenizer(Dataframe_Hewlett_essay_string) #Tokenizing the string
-    NoStopwords_DF = stopwords_remover(Tokenwords) #Removing the stopwords
-    Lemmetizer_String = Lemmaztizer_fn(NoStopwords_DF) #String Stemmer
+    Tokenwords = Tokenizer.tokenizer(Dataframe_Hewlett_essay_string) #Tokenizing the string
+    NoStopwords_DF = Stopwords_Remover.stopwords_remover(Tokenwords) #Removing the stopwords
+    Lemmetizer_String = Lemmtizer.Lemmaztizer_fn(NoStopwords_DF) #String Stemmer
     print("preprocessing_Completed")
     return Lemmetizer_String
     
@@ -81,6 +81,8 @@ def keywords_Verification(Final_Keywords,Dataframe_Hewlett_essay_Check):
 
 
 
+
+'''
 Preprocessed_DF = Preprocessing(Dataframe_Hewlett_essay)
 Keywords = TFIDF(Preprocessed_DF) 
 keywords = Keywords.iloc[0:9,0]
@@ -90,3 +92,6 @@ Matching_keywords = keywords_Verification(Final_Keywords,Dataframe_Hewlett_essay
 
 
 print(Matching_keywords)
+
+
+'''

@@ -3,12 +3,15 @@ from XLnet import XLnet
 from DeepLearning import Preprocessing
 from DeepLearning import DeepLearning
 from openpyxl import load_workbook
-
+from TFIDF import Keywords_Comparison
+from HandcraftedFeatures import HandcraftedFeatures
 
 def main():
     loadedData = Datasetloader()
-    DeepLearningAnswers = XLnetandDeepLearning(loadedData)
-
+    StudentDataset = StudentDatasetLoader()
+    HandcraftedFeature = HandcraftedFeatures(StudentDataset)
+    #DeepLearningAnswers = XLnetandDeepLearning(loadedData)
+    #TFIDF_Score = TFIDF(loadedData)
 
 def XLnetandDeepLearning(loadedData):
     # Length = len(loadedData)
@@ -23,18 +26,37 @@ def XLnetandDeepLearning(loadedData):
         # print(EmbeddedData)
         PreprocessEmbeddedData = Preprocessing.Convert_into_2d(EmbeddedData)
         # print(PreprocessEmbeddedData)
-        print(EmbeddedData)
         listofvecs = []
        # list2 = []
        # array_1d = PreprocessEmbeddedData.flatten()
-        listofvecs.append(EmbeddedData)
+        listofvecs.append(PreprocessEmbeddedData)
        #list2.append(EmbeddedData)
+    #df = pd.DataFrame(listofvecs)
+    print(listofvecs)
 
-    DLModel = DeepLearning.NeuralNetsTrain(listofvecs, Marks)
+    #DLModel = DeepLearning.NeuralNetsTrain(df, Marks)
 
 
-def TFIDF():
-    print("Need to Connect TFIDF Part")
+def TFIDF(Dataset):
+    Preprocessed_DF = Keywords_Comparison.Preprocessing(Dataset)
+    Keywords = Keywords_Comparison.TFIDF(Preprocessed_DF)
+    keywords = Keywords.iloc[0:9, 0]
+    Unstemmed_words = Keywords_Comparison.Unstem(keywords)
+    Final_Keywords = Keywords_Comparison.Getmoresimilarwords(Unstemmed_words)
+    print(Final_Keywords)
+
+    #To Check
+
+    #Matching_keywords = Keywords_Comparison.keywords_Verification(Final_Keywords, Dataframe_Hewlett_essay_Check)
+    #print("Need to Connect TFIDF Part")
+
+
+def HandcraftedFeatures(StudentDataset):
+    #print("HandCrafted Features")
+    SpellingMistakes = HandcraftedFeatures.WordCount()
+    #print()
+
+
 
 
 def Datasetloader():
@@ -42,6 +64,9 @@ def Datasetloader():
     number_of_rows = len(Dataset)
     return Dataset
 
+def StudentDatasetLoader():
+    studentDataset = pd.read_excel('Dataset/Typed Dataset/1(a) completed.xlsx')
+    return studentDataset
 
 if __name__ == "__main__":
     main()

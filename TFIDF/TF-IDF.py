@@ -5,10 +5,9 @@ import sys
 sys.path.append(os.path.abspath("C:/Users/Raj/Desktop/UWA/Semester 3/Research project/Playing Around With Dataset/TF-IDF/"))
 
 # Do the import
-
-from Tokenizer import tokenizer
-from Stopwords_Remover import stopwords_remover
-from Stemmer_File import Stemmer
+from TFIDF import Tokenizer
+from TFIDF import Stopwords_Remover
+from TFIDF import Stemmer_File
 import pandas as pd
 import re
 from sklearn.feature_extraction.text import CountVectorizer
@@ -21,9 +20,9 @@ def Preprocessing(Dataframe_Hewlett_essay):
     Dataframe_Hewlett_essay_string = Dataframe_Hewlett_essay.to_string() #Converting DF to string
     Dataframe_Hewlett_essay_string_lower = Dataframe_Hewlett_essay_string.lower() #Converting into lowercase
     Dataframe_Hewlett_essay_string_nospch = re.sub('[;:!*,/$()?]@', '', Dataframe_Hewlett_essay_string_lower) #Removing special Charecters
-    Tokenwords = tokenizer(Dataframe_Hewlett_essay_string) #Tokenizing the string
-    NoStopwords_DF = stopwords_remover(Tokenwords) #Removing the stopwords
-    Stemmed_String = Stemmer(NoStopwords_DF) #String Stemmer
+    Tokenwords = Tokenizer.tokenizer(Dataframe_Hewlett_essay_string) #Tokenizing the string
+    NoStopwords_DF = Stopwords_Remover.stopwords_remover(Tokenwords) #Removing the stopwords
+    Stemmed_String = Stemmer_File.Stemmer(NoStopwords_DF) #String Stemmer
     return Stemmed_String
     
     
