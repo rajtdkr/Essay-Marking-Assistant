@@ -10,7 +10,7 @@ from keras.models import Sequential
 def NeuralNetsTrain(list2,Marks):
 
     Dimension = len(Marks)
-
+    print(Dimension)
     model = Sequential()
     model.add(Dense(1, input_dim=Dimension, kernel_initializer='normal', activation='relu'))
     model.add(Dense(8, input_dim=8, kernel_initializer='normal', activation='relu'))
