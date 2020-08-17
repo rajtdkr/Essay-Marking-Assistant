@@ -9,9 +9,16 @@ from HandcraftedFeatures import HandcraftedFeatures
 def main():
     loadedData = Datasetloader()
     StudentDataset = StudentDatasetLoader()
-    HandcraftedFeature = HandcraftedFeatures(StudentDataset)
+
+
     #DeepLearningAnswers = XLnetandDeepLearning(loadedData)
-    #TFIDF_Score = TFIDF(loadedData)
+
+
+    TFIDF_Score = TFIDF(loadedData,StudentDataset)
+
+
+    HandcraftedFeature = HandcraftedFeatureFn(loadedData, StudentDataset)
+
 
 def XLnetandDeepLearning(loadedData):
     # Length = len(loadedData)
@@ -37,26 +44,25 @@ def XLnetandDeepLearning(loadedData):
     #DLModel = DeepLearning.NeuralNetsTrain(df, Marks)
 
 
-def TFIDF(Dataset):
+def TFIDF(Dataset , StudentDataset):
+    print("3. TF-IDF : Finding Keywords")
+
     Preprocessed_DF = Keywords_Comparison.Preprocessing(Dataset)
     Keywords = Keywords_Comparison.TFIDF(Preprocessed_DF)
     keywords = Keywords.iloc[0:9, 0]
     Unstemmed_words = Keywords_Comparison.Unstem(keywords)
     Final_Keywords = Keywords_Comparison.Getmoresimilarwords(Unstemmed_words)
-    print(Final_Keywords)
+    Matching_keywords = Keywords_Comparison.keywords_Verification(Final_Keywords, StudentDataset)
 
-    #To Check
-
-    #Matching_keywords = Keywords_Comparison.keywords_Verification(Final_Keywords, Dataframe_Hewlett_essay_Check)
-    #print("Need to Connect TFIDF Part")
+    print(Matching_keywords) #Returns Matched words that are important
 
 
-def HandcraftedFeatures(StudentDataset):
-    #print("HandCrafted Features")
-    SpellingMistakes = HandcraftedFeatures.WordCount()
-    #print()
+def HandcraftedFeatureFn(Dataset , StudentDataset):
+    SpellingMistakes = HandcraftedFeatures.SpellingMistake(StudentDataset) # Written Word Sets that are wrong
+    print(SpellingMistakes) #Returns words with potential Spelling Mistake
 
-
+    WordCount = HandcraftedFeatures.WordCount(Dataset,StudentDataset)
+    print(WordCount) #Returns Teachers with Students Percentage
 
 
 def Datasetloader():
