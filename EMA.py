@@ -11,13 +11,13 @@ def main():
     StudentDataset = StudentDatasetLoader()
 
 
-    #DeepLearningAnswers = XLnetandDeepLearning(loadedData)
+    DeepLearningAnswers = XLnetandDeepLearning(loadedData)
 
 
-    TFIDF_Score = TFIDF(loadedData,StudentDataset)
+    #TFIDF_Score = TFIDF(loadedData,StudentDataset)
 
 
-    HandcraftedFeature = HandcraftedFeatureFn(loadedData, StudentDataset)
+    #HandcraftedFeature = HandcraftedFeatureFn(loadedData, StudentDataset)
 
 
 def XLnetandDeepLearning(loadedData):
@@ -25,26 +25,32 @@ def XLnetandDeepLearning(loadedData):
     Length = 2
     list_of_Embedded_Data = []
     list_of_Marks = []
-    for i in range(0, Length):  # Length
+
+    for i in range(1, Length):  # Length
+
+
         print("Embedding", i + 1, "out of", Length, "Answers")
+
+
         Answer = pd.DataFrame(loadedData.iloc[i - 1:i, 0:1])
         Marks = pd.DataFrame(loadedData.iloc[i - 1:i, 1:2])
+
+        list_of_Marks.append(Marks)
+
+        List1 = []
         EmbeddedData = XLnet.XLnetembeddings(Answer)
-        # print(EmbeddedData)
         PreprocessEmbeddedData = Preprocessing.Convert_into_2d(EmbeddedData)
-        # print(PreprocessEmbeddedData)
-        listofvecs = []
-       # list2 = []
-       # array_1d = PreprocessEmbeddedData.flatten()
-        listofvecs.append(PreprocessEmbeddedData)
-       #list2.append(EmbeddedData)
-    #df = pd.DataFrame(listofvecs)
-    print(listofvecs)
+        list_of_Embedded_Data.append(PreprocessEmbeddedData)
+        List1.append(EmbeddedData)
 
-    #DLModel = DeepLearning.NeuralNetsTrain(df, Marks)
+    print(EmbeddedData.shape)
 
 
-def TFIDF(Dataset , StudentDataset):
+    print("The Mark for this answer is ",list_of_Marks)
+    DLModel = DeepLearning.NeuralNetsTrain(EmbeddedData, list_of_Marks)
+
+
+def TFIDF(Dataset, StudentDataset):
     print("3. TF-IDF : Finding Keywords")
 
     Preprocessed_DF = Keywords_Comparison.Preprocessing(Dataset)
@@ -57,12 +63,15 @@ def TFIDF(Dataset , StudentDataset):
     print(Matching_keywords) #Returns Matched words that are important
 
 
-def HandcraftedFeatureFn(Dataset , StudentDataset):
+def HandcraftedFeatureFn(Dataset, StudentDataset):
     SpellingMistakes = HandcraftedFeatures.SpellingMistake(StudentDataset) # Written Word Sets that are wrong
     print(SpellingMistakes) #Returns words with potential Spelling Mistake
 
     WordCount = HandcraftedFeatures.WordCount(Dataset,StudentDataset)
     print(WordCount) #Returns Teachers with Students Percentage
+
+    GrammarError = HandcraftedFeatures.GrammarCheck() #Returns All Gramatical Errors
+
 
 
 def Datasetloader():

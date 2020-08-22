@@ -4,7 +4,7 @@ def Convert_into_2d(vecs):
     listofvecs = []
     list2 = []
     array_1d = vecs.flatten()
-    listofvecs.append(array_1d)
+    listofvecs.append(vecs)
     list2.append(listofvecs)
 
     return list2
