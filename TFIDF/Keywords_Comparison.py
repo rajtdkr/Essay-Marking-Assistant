@@ -17,17 +17,14 @@ import numpy as np
 from nltk.corpus import wordnet
 from flashtext import KeywordProcessor
 
-#Dataframe_Hewlett_essay = pd.read_excel('C:/Users/Raj/Desktop/UWA/Semester 3/Research project\Playing Around With Dataset/Dataset.xlsx','Sheet1')
-#Dataframe_Hewlett_essay_Check = pd.read_excel('C:/Users/Raj/Desktop/UWA/Semester 3/Research project\Playing Around With Dataset/Students_Data.xlsx','Sheet1')
 
 def Preprocessing(Dataframe_Hewlett_essay):
-    Dataframe_Hewlett_essay_string = Dataframe_Hewlett_essay.to_string() #Converting DF to string
-    Dataframe_Hewlett_essay_string_lower = Dataframe_Hewlett_essay_string.lower() #Converting into lowercase
+    #Dataframe_Hewlett_essay_string = Dataframe_Hewlett_essay.to_string() #Converting DF to string
+    Dataframe_Hewlett_essay_string_lower = Dataframe_Hewlett_essay.lower() #Converting into lowercase
     Dataframe_Hewlett_essay_string_nospch = re.sub('[;:!*,/$()?]@', '', Dataframe_Hewlett_essay_string_lower) #Removing special Charecters
-    Tokenwords = Tokenizer.tokenizer(Dataframe_Hewlett_essay_string) #Tokenizing the string
+    Tokenwords = Tokenizer.tokenizer(Dataframe_Hewlett_essay_string_nospch) #Tokenizing the string
     NoStopwords_DF = Stopwords_Remover.stopwords_remover(Tokenwords) #Removing the stopwords
     Lemmetizer_String = Lemmtizer.Lemmaztizer_fn(NoStopwords_DF) #String Stemmer
-   # print("preprocessing_Completed")
     return Lemmetizer_String
     
     
@@ -36,14 +33,14 @@ def TFIDF(Stemmedwords):
     for l in re.split(r"\.\s|\?\s|\!\s|\n",Stemmedwords):
                 if l:
                     sentences.append(l)
-    cvec = CountVectorizer(stop_words='english', min_df=3, max_df=0.5, ngram_range=(1,2))
+    cvec = CountVectorizer(stop_words='english', min_df=1, max_df=1, ngram_range=(1,2))
     sf = cvec.fit_transform(sentences)
     transformer = TfidfTransformer()
     transformed_weights = transformer.fit_transform(sf)
     weights = np.asarray(transformed_weights.mean(axis=0)).ravel().tolist()
     weights_df = pd.DataFrame({'term': cvec.get_feature_names(), 'weight': weights})
     Keywords = weights_df.sort_values(by='weight', ascending=False).head(10)
-    print("TFIDF Completed")
+    print("TF-IDF Completed")
     return Keywords
 
 
@@ -71,7 +68,7 @@ def Getmoresimilarwords(Unstemmed_words):
         
 def keywords_Verification(Final_Keywords,Dataframe_Hewlett_essay_Check):
     print("Keyword Verfication Entered")
-    Dataframe_Hewlett_essay_Check = Dataframe_Hewlett_essay_Check.to_string()
+    #Dataframe_Hewlett_essay_Check = Dataframe_Hewlett_essay_Check.to_string()
     keyword_processor = KeywordProcessor()
     # keyword_processor.add_keyword(<unclean name>, <standardised name>)
     for i in Final_Keywords:

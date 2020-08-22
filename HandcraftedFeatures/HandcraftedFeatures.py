@@ -1,47 +1,54 @@
 from spellchecker import SpellChecker
 from TFIDF import Keywords_Comparison
 from TFIDF import Tokenizer
-
+import language_check
 
 def SpellingMistake(StudentDataset):
 
-    print("3. HandCrafted Features : Checking SpellingMistake")
+    print("3.1. HandCrafted Features : Checking Spelling Mistake")
 
     Keywords = Keywords_Comparison.Preprocessing(StudentDataset)
     Tokens = Tokenizer.tokenizer(Keywords)
-    print(Tokens)
     spell = SpellChecker()
     ListofUnknownWords = []
-
     ListofUnknownWordsFinal = []
+
     for i in Tokens:
         UnknownWord = spell.unknown([i])
         ListofUnknownWords.append(UnknownWord)
 
-   # print(len(ListofUnknownWords))
     for i in ListofUnknownWords:
         if i != set():
             ListofUnknownWordsFinal.append(i)
-
     return ListofUnknownWordsFinal
 
 def WordCount(Dataset, StudentDataset):
-    print("3. HandCrafted Features : Checking Word Counts")
+
+    print("3.2. HandCrafted Features : Checking Word Counts")
     Keywords = Keywords_Comparison.Preprocessing(StudentDataset)
     Tokens_Students = Tokenizer.tokenizer(Keywords)
-    #print(len(Tokens_Students))
+    print(len(Tokens_Students))
 
     Keywords = Keywords_Comparison.Preprocessing(Dataset)
     Tokens_Teacher = Tokenizer.tokenizer(Keywords)
-    #print(len(Tokens_Teacher))
+    print(len(Tokens_Teacher))
 
     PercentagetoTarget = (len(Tokens_Teacher)/len(Tokens_Students)) * 100
 
     return (PercentagetoTarget)
 
 
-def GrammarCheck():
-    print("Checking Grammar Here")
+def GrammarCheck(fin):
 
+    print("3.2. HandCrafted Features : Checking Grammar Mistakes")
 
+    tool = language_check.LanguageTool('en-US')
+    i = 0
+
+    for line in fin:
+        matches = tool.check(line)
+        i = i + len(matches)
+        pass
+
+    return i
 

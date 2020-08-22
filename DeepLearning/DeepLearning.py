@@ -10,8 +10,6 @@ import keras
 from keras import layers
 
 
-
-
 def NeuralNetsTrain(list2,Marks):
 
     Dimension = len(Marks)
@@ -28,5 +26,5 @@ def NeuralNetsTrain(list2,Marks):
     model.summary()
 
     y = model.predict(list2)
-    print(y)
-    #return model
+
+    return y

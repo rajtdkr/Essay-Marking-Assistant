@@ -17,8 +17,8 @@ Dataframe_Hewlett_essay = pd.read_excel('C:/Users/Raj/Desktop/UWA/Semester 3/Res
 
 
 def Preprocessing(Dataframe_Hewlett_essay):
-    Dataframe_Hewlett_essay_string = Dataframe_Hewlett_essay.to_string() #Converting DF to string
-    Dataframe_Hewlett_essay_string_lower = Dataframe_Hewlett_essay_string.lower() #Converting into lowercase
+    #Dataframe_Hewlett_essay_string = Dataframe_Hewlett_essay.to_string() #Converting DF to string
+    Dataframe_Hewlett_essay_string_lower = Dataframe_Hewlett_essay.lower() #Converting into lowercase
     Dataframe_Hewlett_essay_string_nospch = re.sub('[;:!*,/$()?]@', '', Dataframe_Hewlett_essay_string_lower) #Removing special Charecters
     Tokenwords = Tokenizer.tokenizer(Dataframe_Hewlett_essay_string) #Tokenizing the string
     NoStopwords_DF = Stopwords_Remover.stopwords_remover(Tokenwords) #Removing the stopwords
@@ -31,10 +31,11 @@ def TFIDF(Stemmedwords):
     for l in re.split(r"\.\s|\?\s|\!\s|\n",Stemmedwords):
                 if l:
                     sentences.append(l)
-    cvec = CountVectorizer(stop_words='english', min_df=3, max_df=0.5, ngram_range=(1,2))
-    sf = cvec.fit_transform(sentences)
+    cvec = CountVectorizer(stop_words='english', min_df=1, max_df=2, ngram_range=(1,2))
+    print(cvec)
+    #sf = cvec.fit_transform(sentences)
     transformer = TfidfTransformer()
-    transformed_weights = transformer.fit_transform(sf)
+    transformed_weights = transformer.fit_transform(cvec)
     weights = np.asarray(transformed_weights.mean(axis=0)).ravel().tolist()
     weights_df = pd.DataFrame({'term': cvec.get_feature_names(), 'weight': weights})
     print(weights_df.sort_values(by='weight', ascending=False).head(10))
