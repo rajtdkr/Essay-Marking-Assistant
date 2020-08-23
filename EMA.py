@@ -11,40 +11,29 @@ def main():
     loadedData = Datasetloader()
     StudentDataset = StudentDatasetLoader()
 
-    length = 2
 
     TeachersData = loadedData.values.tolist()
     StudentData = StudentDataset.values.tolist()
 
-    DeepLearningAnswers = XLnetandDeepLearning(TeachersData[0][0],StudentData[0][0])
 
-    TFIDF_Score = TFIDF(TeachersData[0][0],StudentData[0][0])
+    DeepLearningAnswers = XLnetandDeepLearning(TeachersData,StudentData[0][0])
 
-    HandcraftedFeature = HandcraftedFeatureFn(TeachersData[0][0],StudentData[0][0])
+    #TFIDF_Score = TFIDF(TeachersData[0][0],StudentData[0][0])
+
+    #HandcraftedFeature = HandcraftedFeatureFn(TeachersData[0][0],StudentData[0][0])
 
 
 def XLnetandDeepLearning(loadedData,StudentDataset):
     # Length = len(loadedData)
-    Length = 2
-    list_of_Embedded_Data = []
-    list_of_Marks = []
+    Full_Marks = []
+    Marks = loadedData[0][1]
+    Full_Marks.append(Marks)
+    Teachers_EmbeddedData = XLnet.XLnetembeddings(loadedData[0][0])
+    DLModel_Trained = DeepLearning.NeuralNetsTrain(Teachers_EmbeddedData, Full_Marks)
+    Students_EmbeddedData = XLnet.XLnetembeddings(StudentDataset[0][0])
+    Marks = DLModel_Trained.predict(Students_EmbeddedData)
 
-    for i in range(1, Length):  # Length
-
-        print("Embedding", i, "out of", Length, "Answers")
-        Answer = pd.DataFrame(loadedData.iloc[i - 1:i, 0:1])
-        Marks = pd.DataFrame(loadedData.iloc[i - 1:i, 1:2])
-
-        print(Answer)
-
-        list_of_Marks.append(Marks)
-        List1 = []
-        EmbeddedData = XLnet.XLnetembeddings(Answer)
-        PreprocessEmbeddedData = Preprocessing.Convert_into_2d(EmbeddedData)
-        list_of_Embedded_Data.append(PreprocessEmbeddedData)
-        List1.append(EmbeddedData)
-   # DLModel = DeepLearning.NeuralNetsTrain(EmbeddedData, list_of_Marks)
-
+    print(Marks*loadedData[0][1])
 
 def TFIDF(Dataset, StudentDataset):
 
@@ -61,12 +50,6 @@ def TFIDF(Dataset, StudentDataset):
 
 def HandcraftedFeatureFn(Dataset, StudentDataset):
 
-    #Length = len(StudentDataset)
-    Length = 2
-
-
-    #print("Teachers Dataset : ",Dataset.to_string())
-    #print("Students Dataset : ",StudentDataset.to_string())
 
     SpellingMistakes = HandcraftedFeatures.SpellingMistake(StudentDataset) # Written Word Sets that are wrong
     print(len(SpellingMistakes)) #Returns words with potential Spelling Mistake

@@ -23,8 +23,7 @@ def NeuralNetsTrain(list2,Marks):
     model.add(Dense(1, activation='sigmoid'))
     model.compile(loss='mean_squared_error', optimizer='adam', metrics=['mae'])
     model.fit(list2, Marks, batch_size=3, epochs=2)
-    model.summary()
+    #model.summary()
+    #y = model.predict(list2)
 
-    y = model.predict(list2)
-
-    return y
+    return model
