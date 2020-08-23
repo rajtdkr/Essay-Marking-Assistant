@@ -40,7 +40,7 @@ def TFIDF(Stemmedwords):
     weights = np.asarray(transformed_weights.mean(axis=0)).ravel().tolist()
     weights_df = pd.DataFrame({'term': cvec.get_feature_names(), 'weight': weights})
     Keywords = weights_df.sort_values(by='weight', ascending=False).head(10)
-    print("TF-IDF Completed")
+   # print("TF-IDF Completed")
     return Keywords
 
 
@@ -52,7 +52,7 @@ def Unstem(keywords):
        Unstem_list.append(spell.correction(word))
         #print(f'{word}:{spell.correction(word)}:probability {spell.word_probability(word)}')
     #print(Unstem_list)
-    print("Orginal Words Retrived")
+    #print("Orginal Words Retrived")
     return Unstem_list
 
 def Getmoresimilarwords(Unstemmed_words):
@@ -63,11 +63,11 @@ def Getmoresimilarwords(Unstemmed_words):
         for syn in wordnet.synsets(i):
         	for l in syn.lemmas():
         		Final_Keywords.append(l.name())
-    print("Values Retured")
+    #print("Values Retured")
     return(Final_Keywords)            
         
 def keywords_Verification(Final_Keywords,Dataframe_Hewlett_essay_Check):
-    print("Keyword Verfication Entered")
+    #print("Keyword Verfication Entered")
     #Dataframe_Hewlett_essay_Check = Dataframe_Hewlett_essay_Check.to_string()
     keyword_processor = KeywordProcessor()
     # keyword_processor.add_keyword(<unclean name>, <standardised name>)

@@ -27,11 +27,9 @@ def WordCount(Dataset, StudentDataset):
     print("3.2. HandCrafted Features : Checking Word Counts")
     Keywords = Keywords_Comparison.Preprocessing(StudentDataset)
     Tokens_Students = Tokenizer.tokenizer(Keywords)
-    print(len(Tokens_Students))
 
     Keywords = Keywords_Comparison.Preprocessing(Dataset)
     Tokens_Teacher = Tokenizer.tokenizer(Keywords)
-    print(len(Tokens_Teacher))
 
     PercentagetoTarget = (len(Tokens_Teacher)/len(Tokens_Students)) * 100
 

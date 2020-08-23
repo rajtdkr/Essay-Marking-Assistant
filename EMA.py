@@ -14,13 +14,13 @@ def main():
     length = 2
 
     TeachersData = loadedData.values.tolist()
-    StudentData = loadedData.values.tolist()
-    print(StudentData[0][0])
-    #DeepLearningAnswers = XLnetandDeepLearning(loadedData,StudentDataset)
+    StudentData = StudentDataset.values.tolist()
+
+    DeepLearningAnswers = XLnetandDeepLearning(TeachersData[0][0],StudentData[0][0])
 
     TFIDF_Score = TFIDF(TeachersData[0][0],StudentData[0][0])
 
-    #HandcraftedFeature = HandcraftedFeatureFn(loadedData, StudentDataset)
+    HandcraftedFeature = HandcraftedFeatureFn(TeachersData[0][0],StudentData[0][0])
 
 
 def XLnetandDeepLearning(loadedData,StudentDataset):
@@ -51,9 +51,7 @@ def TFIDF(Dataset, StudentDataset):
 
     print("2. TF-IDF : Finding Keywords")
     Preprocessed_DF = Keywords_Comparison.Preprocessing(Dataset)
-    print(Preprocessed_DF)
     Keywords = Keywords_Comparison.TFIDF(Preprocessed_DF)
-
     keywords = Keywords.iloc[0:9, 0]
     Unstemmed_words = Keywords_Comparison.Unstem(keywords)
     Final_Keywords = Keywords_Comparison.Getmoresimilarwords(Unstemmed_words)
@@ -66,25 +64,21 @@ def HandcraftedFeatureFn(Dataset, StudentDataset):
     #Length = len(StudentDataset)
     Length = 2
 
-    for i in range(1,Length):
 
-        Dataset = pd.DataFrame(Dataset.iloc[0:1, 0:1])
-        StudentDataset = pd.DataFrame(StudentDataset.iloc[i:i+1, 0:1])
+    #print("Teachers Dataset : ",Dataset.to_string())
+    #print("Students Dataset : ",StudentDataset.to_string())
 
-        #print("Teachers Dataset : ",Dataset.to_string())
-        #print("Students Dataset : ",StudentDataset.to_string())
+    SpellingMistakes = HandcraftedFeatures.SpellingMistake(StudentDataset) # Written Word Sets that are wrong
+    print(len(SpellingMistakes)) #Returns words with potential Spelling Mistake
+    #print(SpellingMistakes)
 
-        SpellingMistakes = HandcraftedFeatures.SpellingMistake(StudentDataset) # Written Word Sets that are wrong
-        print(len(SpellingMistakes)) #Returns words with potential Spelling Mistake
-        #print(SpellingMistakes)
+    WordCount = HandcraftedFeatures.WordCount(Dataset,StudentDataset)
+    print(WordCount) #Returns Teachers with Students Percentage
 
-        WordCount = HandcraftedFeatures.WordCount(Dataset,StudentDataset)
-        print(WordCount) #Returns Teachers with Students Percentage
+    GrammarError = HandcraftedFeatures.GrammarCheck(Dataset) #Returns All Gramatical Errors
+    print(GrammarError)
 
-        GrammarError = HandcraftedFeatures.GrammarCheck(Dataset) #Returns All Gramatical Errors
-        print(GrammarError)
-
-        return SpellingMistakes,WordCount,GrammarError
+    return SpellingMistakes,WordCount,GrammarError
 
 
 def Datasetloader():
