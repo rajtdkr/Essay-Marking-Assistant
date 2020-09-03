@@ -48,5 +48,7 @@ def GrammarCheck(fin):
         i = i + len(matches)
         pass
 
-    return i
+    #print(matches)
+
+    return matches
 
