@@ -6,94 +6,82 @@ from openpyxl import load_workbook
 from TFIDF import Keywords_Comparison
 from HandcraftedFeatures import HandcraftedFeatures
 from Paraphrasing import Paraphrase
+from OutputDisplay import DisplayOutput
 
 def main():
 
     loadedData = Datasetloader()
     StudentDataset = StudentDatasetLoader()
-
     TeachersData = loadedData.values.tolist()
     StudentData = StudentDataset.values.tolist()
 
-    #Paraphrased_Sentence = Paraphrase.wordParaphrasing(TeachersData[0][0])
+    print("The data is Training")
+    Paraphrased_Sentence = Paraphrase.wordParaphrasing(TeachersData[0][0])
+    TeachersData[0][0] = str(TeachersData[0][0]) + str(Paraphrased_Sentence)
+    DeepLearningTrained = XLnetandDeepLearning(TeachersData[0][0], TeachersData[0][1])
 
-    DeepLearningAnswers = XLnetandDeepLearning(TeachersData, StudentData)
+    Input = input("Do you want to check answer? \n y for Yes and \n n for No")
 
-    TFIDF_Score = TFIDF(TeachersData[0][0],StudentData[0][0])
+    AnswerNumber = 0
+    while(Input == 'y'):
 
-    HandcraftedFeature = HandcraftedFeatureFn(TeachersData[0][0],StudentData[0][0])
+        DeepLearningEvaluate = XLnetandDeepLearningEvaluate(DeepLearningTrained,StudentData[AnswerNumber][0])
+        TFIDF_Words = TFIDF(TeachersData[0][0],StudentData[AnswerNumber][0])
+        HandcraftedFeature = HandcraftedFeatureFn(TeachersData[0][0],StudentData[AnswerNumber][0])
+        DisplayOutput.DisplayOutput(0,0,0)
+        AnswerNumber = AnswerNumber + 1
+
+        if AnswerNumber < len(StudentData):
+            Input = input("Do you want to check another answer? \n y for Yes and \n n for No")
+        else:
+            exit()
 
 
-def XLnetandDeepLearning(loadedData, StudentDataset):
+def XLnetandDeepLearningEvaluate(DLModel_Trained,StudentData):
 
-    Full_Marks = []
-    Marks = loadedData[0][1]
-
-    Full_Marks.append(Marks)
-    Teachers_EmbeddedData = XLnet.XLnetembeddings(loadedData[0][0])
-    DLModel_Trained = DeepLearning.NeuralNetsTrain(Teachers_EmbeddedData, Full_Marks)
-
+    print("_______________DeepLearning______________")
     StudentSentences = []
     StudentSentencesMarks = []
-    StudentSentencesFinalMarks = []
-    StudentDS = []
-    for i in range(0,len(StudentDataset)):
-        Str = StudentDataset[i][0]
-        STRA = Str.split('.')
-        StudentSentences.append(STRA)
+    StudentSentences = StudentData.split('.')
+    for i in range(0,len(StudentSentences)):
+        if bool(StudentSentences[i].strip()) == True:
+            Students_EmbeddedData = XLnet.XLnetembeddings(StudentSentences[i])
+            Marks = DLModel_Trained.predict(Students_EmbeddedData)
+            StudentSentencesMarks.append(Marks)
+        else:
+            print("Found an empty String")
+    return StudentSentencesMarks
 
-    No_of_Answers_to_Check = len(StudentSentences)
-    No_of_Answers_to_Check = 1
-    for i in range(0,No_of_Answers_to_Check):
-        length = len(StudentSentences[i])
-        StudentSentencesFinalMarks.append(StudentSentencesMarks)
-        StudentSentencesMarks = []
-        for j in range(0,length):
 
-            print("Embedding",j ,"sentence", i+1 ,"th answer out of",No_of_Answers_to_Check ,"student sentence")
-            print(StudentSentences[i][j])
 
-            if bool(StudentSentences[i][j].strip()) == True:
-                print(StudentSentences[i][j].strip())
-                print(bool(StudentSentences[i][j].strip()))
-                Students_EmbeddedData = XLnet.XLnetembeddings(StudentSentences[i][j])
-                print("Inserting into the model")
-                Marks = DLModel_Trained.predict(Students_EmbeddedData)
-                StudentSentencesMarks.append(Marks)
-            else:
-                print("Found an empty String")
+def XLnetandDeepLearning(TeachersAnswer, Full_Marks ):
 
-    #FinalMarksDF = pd.DataFrame(StudentSentencesMarks)
-    #FinalMarksDF.to_excel("C:/Users/Raj/Desktop/UWA/Semester 4/Research/OUTPUT", sheet_name='Sheet_name_1')
-    print((DLModel_Trained))
-    print("___________________DL Model________________________")
-    print("Total Marks given by DL model", Marks*loadedData[0][1])
-    print("Marks allocated based on each sentences", StudentSentencesMarks)
+    Full_Marks_List = []
+    Full_Marks_List.append(Full_Marks)
+    Teachers_EmbeddedData = XLnet.XLnetembeddings(TeachersAnswer[0][0])
+    DLModel_Trained = DeepLearning.NeuralNetsTrain(Teachers_EmbeddedData, Full_Marks_List)
+    return DLModel_Trained
 
 def TFIDF(Dataset, StudentDataset):
+
     print("___________________Keyword Finder________________________")
-    print("2. TF-IDF : Finding Keywords")
+    #print("2. TF-IDF : Finding Keywords")
     Preprocessed_DF = Keywords_Comparison.Preprocessing(Dataset)
     Keywords = Keywords_Comparison.TFIDF(Preprocessed_DF)
     keywords = Keywords.iloc[0:9, 0]
     Unstemmed_words = Keywords_Comparison.Unstem(keywords)
     Final_Keywords = Keywords_Comparison.Getmoresimilarwords(Unstemmed_words)
     Matching_keywords = Keywords_Comparison.keywords_Verification(Final_Keywords, StudentDataset)
-    print(Matching_keywords) #Returns Matched words that are important
+    # print(Matching_keywords) #Returns Matched words that are important
 
+    return Matching_keywords
 
 def HandcraftedFeatureFn(Dataset, StudentDataset):
 
     print("___________________Finding Other Features________________________")
     SpellingMistakes = HandcraftedFeatures.SpellingMistake(StudentDataset) # Written Word Sets that are wrong
-    print(len(SpellingMistakes)) #Returns words with potential Spelling Mistake
-    #print(SpellingMistakes)
-
-    WordCount = HandcraftedFeatures.WordCount(Dataset,StudentDataset)
-    print(WordCount) #Returns Teachers with Students Percentage
-
+    WordCount = HandcraftedFeatures.WordCount(Dataset,StudentDataset)#Returns Teachers with Students Percentage
     GrammarError = HandcraftedFeatures.GrammarCheck(Dataset) #Returns All Gramatical Errors
-    print(GrammarError)
 
     return SpellingMistakes,WordCount,GrammarError
 

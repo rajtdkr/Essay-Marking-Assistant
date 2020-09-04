@@ -1,13 +1,13 @@
 from TFIDF import Keywords_Comparison
 from nltk.corpus import wordnet
 from TFIDF import Tokenizer
+from nltk.tokenize.treebank import TreebankWordDetokenizer
 
 def wordParaphrasing(Sentence):
 
     Preprocessed_DF = Keywords_Comparison.Preprocessing(Sentence)
     Keywords = Keywords_Comparison.TFIDF(Preprocessed_DF)
 
-    #print(keywords)
     Final_Keywords = []
     for i in range(0,10):
         keywords = Keywords.iloc[i, 0]
@@ -16,22 +16,27 @@ def wordParaphrasing(Sentence):
         	for l in syn.lemmas():
         		Final_Keywords.append(l.name())
 
-
     TokenizedSentence = Tokenizer.tokenizer(Sentence)
 
     length = len(Final_Keywords)
     count_sentence = 0
     count_Keywords = 0
+
+    Length = len(Final_Keywords)
+
+    ParaphrasedAnswer = []
+
     for i in TokenizedSentence:
-        count_sentence = count_sentence + 1
-        for j in range(0,len(Final_Keywords)-1):
-            count_Keywords = count_Keywords + 1
-            if i == j:
-                    if j != "Another Word" and Final_Keywords[count_Keywords+1]:
+        count = -1
+        for j in Final_Keywords:
+            count = count + 1
+            if i == j and Length > count-1:
+                #print(Length,count)
+                i = Final_Keywords[count+1]
+                #print(i,"needs to be replaced by",Final_Keywords[count+1])
+                break
+        ParaphrasedAnswer.append(i)
 
-                        TokenizedSentence[count_sentence] = Final_Keywords[count_Keywords+1]
+    ParaphrasedAnswer_Final = TreebankWordDetokenizer().detokenize(ParaphrasedAnswer)
 
-    print(TokenizedSentence)
-    #Unstemmed_words = Keywords_Comparison.Unstem(keywords)
-    #Final_Keywords = Keywords_Comparison.Getmoresimilarwords(Unstemmed_words)
-    #print(Final_Keywords)
+    return ParaphrasedAnswer_Final
