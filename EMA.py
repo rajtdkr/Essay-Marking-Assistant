@@ -15,7 +15,7 @@ def main():
     TeachersData = loadedData.values.tolist()
     StudentData = StudentDataset.values.tolist()
 
-    print("The data is Training")
+
     Paraphrased_Sentence = Paraphrase.wordParaphrasing(TeachersData[0][0])
     TeachersData[0][0] = str(TeachersData[0][0]) + str(Paraphrased_Sentence)
     DeepLearningTrained = XLnetandDeepLearning(TeachersData[0][0], TeachersData[0][1])
@@ -25,12 +25,12 @@ def main():
     AnswerNumber = 0
     while(Input == 'y'):
 
-        DeepLearningEvaluate = XLnetandDeepLearningEvaluate(DeepLearningTrained,StudentData[AnswerNumber][0])
+        DeepLearningEvaluated = XLnetandDeepLearningEvaluate(DeepLearningTrained,StudentData[AnswerNumber][0])
         TFIDF_Words = TFIDF(TeachersData[0][0],StudentData[AnswerNumber][0])
         HandcraftedFeature = HandcraftedFeatureFn(TeachersData[0][0],StudentData[AnswerNumber][0])
-        DisplayOutput.DisplayOutput(0,0,0)
-        AnswerNumber = AnswerNumber + 1
+        DisplayOutput.DisplayOutput(DeepLearningEvaluated,TFIDF_Words,HandcraftedFeature)
 
+        AnswerNumber = AnswerNumber + 1
         if AnswerNumber < len(StudentData):
             Input = input("Do you want to check another answer? \n y for Yes and \n n for No")
         else:
@@ -49,18 +49,19 @@ def XLnetandDeepLearningEvaluate(DLModel_Trained,StudentData):
             Marks = DLModel_Trained.predict(Students_EmbeddedData)
             StudentSentencesMarks.append(Marks)
         else:
-            print("Found an empty String")
+            print("Found an empty String, Ignoring the emppty String")
     return StudentSentencesMarks
 
 
 
 def XLnetandDeepLearning(TeachersAnswer, Full_Marks ):
-
+    print("The data is Training")
     Full_Marks_List = []
     Full_Marks_List.append(Full_Marks)
     Teachers_EmbeddedData = XLnet.XLnetembeddings(TeachersAnswer[0][0])
     DLModel_Trained = DeepLearning.NeuralNetsTrain(Teachers_EmbeddedData, Full_Marks_List)
     return DLModel_Trained
+
 
 def TFIDF(Dataset, StudentDataset):
 
@@ -73,7 +74,7 @@ def TFIDF(Dataset, StudentDataset):
     Final_Keywords = Keywords_Comparison.Getmoresimilarwords(Unstemmed_words)
     Matching_keywords = Keywords_Comparison.keywords_Verification(Final_Keywords, StudentDataset)
     # print(Matching_keywords) #Returns Matched words that are important
-
+    print("2. Keywords Finding Complete")
     return Matching_keywords
 
 def HandcraftedFeatureFn(Dataset, StudentDataset):

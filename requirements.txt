@@ -1,0 +1,10 @@
+pandas~=1.1.0
+Keras~=2.2.4
+numpy~=1.16.4
+sklearn~=0.0
+scikit-learn~=0.23.2
+nltk~=3.3
+tokenizer~=2.1.0
+flashtext~=2.7
+openpyxl~=3.0.4
+sty~=1.0.0b12
