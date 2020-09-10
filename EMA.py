@@ -28,7 +28,7 @@ def main():
         DeepLearningEvaluated = XLnetandDeepLearningEvaluate(DeepLearningTrained,StudentData[AnswerNumber][0])
         TFIDF_Words = TFIDF(TeachersData[0][0],StudentData[AnswerNumber][0])
         HandcraftedFeature = HandcraftedFeatureFn(TeachersData[0][0],StudentData[AnswerNumber][0])
-        DisplayOutput.DisplayOutput(DeepLearningEvaluated,TFIDF_Words,HandcraftedFeature)
+        DisplayOutput.DisplayOutput(TFIDF_Words,DeepLearningEvaluated,HandcraftedFeature,StudentData[AnswerNumber][0])
 
         AnswerNumber = AnswerNumber + 1
         if AnswerNumber < len(StudentData):
@@ -89,14 +89,14 @@ def HandcraftedFeatureFn(Dataset, StudentDataset):
 
 def Datasetloader():
 
-    Dataset = pd.read_excel('Dataset/Typed Dataset/1(a) Teachers Answer.xlsx', 'Sheet1')
+    Dataset = pd.read_excel('Dataset/Typed Dataset/4(a) Teachers Answer.xlsx', 'Sheet1')
     number_of_rows = len(Dataset)
 
     return Dataset
 
 def StudentDatasetLoader():
 
-    studentDataset = pd.read_excel('Dataset/Typed Dataset/1(a) completed.xlsx')
+    studentDataset = pd.read_excel('Dataset/Typed Dataset/4(a) completed.xlsx')
 
     return studentDataset
 
