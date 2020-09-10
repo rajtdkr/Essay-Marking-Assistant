@@ -1,15 +1,28 @@
 from sty import fg, bg, ef, rs
 from sty import Style, RgbFg
+from TFIDF import Tokenizer
+from nltk.tokenize.treebank import TreebankWordDetokenizer
 
 
 def DisplayOutput(TFIDF,DeepLearning,HandcraftedFeatures,CheckedAnswer):
 
-    print(CheckedAnswer)
-    print("The import that words are",TFIDF)
-    for i in TFIDF:
-        bar = bg.blue + i + bg.rs
-        print(bar)
+    CheckedAnswerTokenized = Tokenizer.tokenizer(CheckedAnswer)
+    #print(CheckedAnswerTokenized)
+    #print("The import that words are",TFIDF)
+    for i in range(0, len(CheckedAnswerTokenized)):
+        for j in TFIDF:
+            if CheckedAnswerTokenized[i] == j:
+                Colored_Keyword = ef.bold + j + rs.bold_dim
+                CheckedAnswerTokenized[i] = Colored_Keyword
+
+    print(TreebankWordDetokenizer().detokenize(CheckedAnswerTokenized))
+
+
+
     print("Marks For Each Sentences" , DeepLearning)
+
+
+
     print(HandcraftedFeatures)
 
 

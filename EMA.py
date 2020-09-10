@@ -32,7 +32,7 @@ def main():
 
         AnswerNumber = AnswerNumber + 1
         if AnswerNumber < len(StudentData):
-            Input = input("Do you want to check another answer? \n y for Yes and \n n for No")
+            Input = input("Do you want to check another answer? \n y for Yes and n for No:")
         else:
             exit()
 
@@ -43,7 +43,7 @@ def XLnetandDeepLearningEvaluate(DLModel_Trained,StudentData):
     StudentSentences = []
     StudentSentencesMarks = []
     StudentSentences = StudentData.split('.')
-    for i in range(0,len(StudentSentences)):
+    for i in range(0,len(StudentSentences)-1):
         if bool(StudentSentences[i].strip()) == True:
             Students_EmbeddedData = XLnet.XLnetembeddings(StudentSentences[i])
             Marks = DLModel_Trained.predict(Students_EmbeddedData)
@@ -67,15 +67,17 @@ def TFIDF(Dataset, StudentDataset):
 
     print("___________________Keyword Finder________________________")
     #print("2. TF-IDF : Finding Keywords")
-    Preprocessed_DF = Keywords_Comparison.Preprocessing(Dataset)
+    Preprocessed_DF = Keywords_Comparison.Preprocessing(StudentDataset)
     Keywords = Keywords_Comparison.TFIDF(Preprocessed_DF)
     keywords = Keywords.iloc[0:9, 0]
-    Unstemmed_words = Keywords_Comparison.Unstem(keywords)
-    Final_Keywords = Keywords_Comparison.Getmoresimilarwords(Unstemmed_words)
-    Matching_keywords = Keywords_Comparison.keywords_Verification(Final_Keywords, StudentDataset)
+    #print(keywords)
+    #Unstemmed_words = Keywords_Comparison.Unstem(keywords)
+    #Final_Keywords = Keywords_Comparison.Getmoresimilarwords(Unstemmed_words)
+    #print(Final_Keywords)
+    #Matching_keywords = Keywords_Comparison.keywords_Verification(Final_Keywords, StudentDataset)
     # print(Matching_keywords) #Returns Matched words that are important
     print("2. Keywords Finding Complete")
-    return Matching_keywords
+    return keywords
 
 def HandcraftedFeatureFn(Dataset, StudentDataset):
 

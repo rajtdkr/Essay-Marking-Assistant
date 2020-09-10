@@ -40,6 +40,7 @@ def TFIDF(Stemmedwords):
     weights = np.asarray(transformed_weights.mean(axis=0)).ravel().tolist()
     weights_df = pd.DataFrame({'term': cvec.get_feature_names(), 'weight': weights})
     Keywords = weights_df.sort_values(by='weight', ascending=False).head(10)
+    #print(Keywords)
    # print("TF-IDF Completed")
     return Keywords
 
