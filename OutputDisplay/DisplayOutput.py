@@ -6,6 +6,15 @@ from nltk.tokenize.treebank import TreebankWordDetokenizer
 
 def DisplayOutput(TFIDF,DeepLearning,HandcraftedFeatures,CheckedAnswer):
 
+
+    Similarities = []
+    for i in DeepLearning:
+        for j in i.tolist():
+            for k in j:
+                Similarities.append(k)
+    print("Marks For Each Sentences" , Similarities)
+   # print(HandcraftedFeatures)
+
     CheckedAnswerTokenized = Tokenizer.tokenizer(CheckedAnswer)
     #print(CheckedAnswerTokenized)
     #print("The import that words are",TFIDF)
@@ -15,15 +24,12 @@ def DisplayOutput(TFIDF,DeepLearning,HandcraftedFeatures,CheckedAnswer):
                 Colored_Keyword = ef.bold + j + rs.bold_dim
                 CheckedAnswerTokenized[i] = Colored_Keyword
 
+
+
     print(TreebankWordDetokenizer().detokenize(CheckedAnswerTokenized))
 
 
 
-    print("Marks For Each Sentences" , DeepLearning)
-
-
-
-    print(HandcraftedFeatures)
 
 
 
