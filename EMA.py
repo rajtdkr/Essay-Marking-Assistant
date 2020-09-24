@@ -20,26 +20,28 @@ def main():
     TeachersData[0][0] = str(TeachersData[0][0]) + str(Paraphrased_Sentence)
     DeepLearningTrained = XLnetandDeepLearning(TeachersData[0][0], TeachersData[0][1])
 
-    Input = input("Do you want to check answer? \n y for Yes and \n n for No")
-
+    #Input = input("Do you want to check answer? \n y for Yes and \n n for No")
+    Input = 'y'
     AnswerNumber = 0
     while(Input == 'y'):
 
         DeepLearningEvaluated = XLnetandDeepLearningEvaluate(DeepLearningTrained,StudentData[AnswerNumber][0])
         TFIDF_Words = TFIDF(TeachersData[0][0],StudentData[AnswerNumber][0])
-        HandcraftedFeature = HandcraftedFeatureFn(TeachersData[0][0],StudentData[AnswerNumber][0])
-        DisplayOutput.DisplayOutput(TFIDF_Words,DeepLearningEvaluated,HandcraftedFeature,StudentData[AnswerNumber][0])
+        HandcraftedFeature = 0
+
+       # HandcraftedFeature = HandcraftedFeatureFn(TeachersData[0][0],StudentData[AnswerNumber][0])
+        DisplayOutput.DisplayOutput(TFIDF_Words,DeepLearningEvaluated,HandcraftedFeature,StudentData[AnswerNumber][0],AnswerNumber)
 
         AnswerNumber = AnswerNumber + 1
-        if AnswerNumber < len(StudentData):
-            Input = input("Do you want to check another answer? \n y for Yes and n for No:")
-        else:
-            exit()
+        # if AnswerNumber < len(StudentData):
+        #     Input = input("Do you want to check another answer? \n y for Yes and n for No:")
+        # else:
+        #     exit()
 
 
 def XLnetandDeepLearningEvaluate(DLModel_Trained,StudentData):
 
-    print("_______________DeepLearning______________")
+    #print("_______________DeepLearning______________")
     StudentSentences = []
     StudentSentencesMarks = []
     StudentSentences = StudentData.split('.')
@@ -55,7 +57,7 @@ def XLnetandDeepLearningEvaluate(DLModel_Trained,StudentData):
 
 
 def XLnetandDeepLearning(TeachersAnswer, Full_Marks ):
-    print("The data is Training")
+    #print("The data is Training")
     Full_Marks_List = []
     Full_Marks_List.append(Full_Marks)
     Teachers_EmbeddedData = XLnet.XLnetembeddings(TeachersAnswer[0][0])
@@ -65,7 +67,7 @@ def XLnetandDeepLearning(TeachersAnswer, Full_Marks ):
 
 def TFIDF(Dataset, StudentDataset):
 
-    print("___________________Keyword Finder________________________")
+    #print("___________________Keyword Finder________________________")
     #print("2. TF-IDF : Finding Keywords")
     Preprocessed_DF = Keywords_Comparison.Preprocessing(StudentDataset)
     Keywords = Keywords_Comparison.TFIDF(Preprocessed_DF)
@@ -76,12 +78,12 @@ def TFIDF(Dataset, StudentDataset):
     #print(Final_Keywords)
     #Matching_keywords = Keywords_Comparison.keywords_Verification(Final_Keywords, StudentDataset)
     # print(Matching_keywords) #Returns Matched words that are important
-    print("2. Keywords Finding Complete")
+    #print("2. Keywords Finding Complete")
     return keywords
 
 def HandcraftedFeatureFn(Dataset, StudentDataset):
 
-    print("___________________Finding Other Features________________________")
+    #print("___________________Finding Other Features________________________")
     SpellingMistakes = HandcraftedFeatures.SpellingMistake(StudentDataset) # Written Word Sets that are wrong
     WordCount = HandcraftedFeatures.WordCount(Dataset,StudentDataset)#Returns Teachers with Students Percentage
     GrammarError = HandcraftedFeatures.GrammarCheck(Dataset) #Returns All Gramatical Errors
@@ -91,14 +93,14 @@ def HandcraftedFeatureFn(Dataset, StudentDataset):
 
 def Datasetloader():
 
-    Dataset = pd.read_excel('Dataset/Typed Dataset/4(a) Teachers Answer.xlsx', 'Sheet1')
+    Dataset = pd.read_excel('Dataset/Typed Dataset/4(b) Teachers Answer.xlsx', 'Sheet1')
     number_of_rows = len(Dataset)
 
     return Dataset
 
 def StudentDatasetLoader():
 
-    studentDataset = pd.read_excel('Dataset/Typed Dataset/4(a) completed.xlsx')
+    studentDataset = pd.read_excel('Dataset/Typed Dataset/4(b) completed.xlsx')
 
     return studentDataset
 

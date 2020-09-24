@@ -2,10 +2,10 @@ from sty import fg, bg, ef, rs
 from sty import Style, RgbFg
 from TFIDF import Tokenizer
 from nltk.tokenize.treebank import TreebankWordDetokenizer
+import pandas as pd
+from openpyxl import load_workbook
 
-
-def DisplayOutput(TFIDF,DeepLearning,HandcraftedFeatures,CheckedAnswer):
-
+def DisplayOutput(TFIDF,DeepLearning,HandcraftedFeatures,CheckedAnswer,AnswerNumber):
 
     Similarities = []
     for i in DeepLearning:
@@ -13,22 +13,47 @@ def DisplayOutput(TFIDF,DeepLearning,HandcraftedFeatures,CheckedAnswer):
             for k in j:
                 Similarities.append(k)
     print("Marks For Each Sentences" , Similarities)
-   # print(HandcraftedFeatures)
+
 
     CheckedAnswerTokenized = Tokenizer.tokenizer(CheckedAnswer)
-    #print(CheckedAnswerTokenized)
-    #print("The import that words are",TFIDF)
+
     for i in range(0, len(CheckedAnswerTokenized)):
         for j in TFIDF:
             if CheckedAnswerTokenized[i] == j:
                 Colored_Keyword = ef.bold + j + rs.bold_dim
                 CheckedAnswerTokenized[i] = Colored_Keyword
 
+    CheckedAnswerKeywords = TreebankWordDetokenizer().detokenize(CheckedAnswerTokenized)
+
+    CheckedAnswerSentences = []
+    CheckedAnswerSentences = CheckedAnswerKeywords.split('.');
 
 
-    print(TreebankWordDetokenizer().detokenize(CheckedAnswerTokenized))
 
+    for i,j in zip(range(len(CheckedAnswerSentences)),Similarities):
 
+        if (j>0 and j<0.45):
+            CheckedAnswerSentences[i] = fg.blue + CheckedAnswerSentences[i] + fg.rs
+        if (j>0.45 and j < 0.55):
+            CheckedAnswerSentences[i] = fg.yellow + CheckedAnswerSentences[i] + fg.rs
+        if (j> 0.55 and j <1 ):
+            CheckedAnswerSentences[i] = fg.green + CheckedAnswerSentences[i] + fg.rs
+
+    final_output = ".".join(CheckedAnswerSentences)
+
+    print(final_output)
+
+    # if AnswerNumber == 0:
+    #     listofanswers = []
+    #     listofanswers.append(final_output)
+    #     df2 = pd.DataFrame(listofanswers)
+    #     with pd.ExcelWriter('output.xlsx') as writer:
+    #         df2.to_excel(writer)
+    # else:
+    #     listofanswers.append(final_output)
+    #     df2 = pd.DataFrame(listofanswers)
+    #     with pd.ExcelWriter('output.xlsx') as writer:
+    #         df2.to_excel(writer)
 
 
 
