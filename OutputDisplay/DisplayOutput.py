@@ -7,13 +7,15 @@ from openpyxl import load_workbook
 
 def DisplayOutput(TFIDF,DeepLearning,HandcraftedFeatures,CheckedAnswer,AnswerNumber):
 
+    TotalMarks = 0
     Similarities = []
     for i in DeepLearning:
         for j in i.tolist():
             for k in j:
                 Similarities.append(k)
-    print("Marks For Each Sentences" , Similarities)
-
+                TotalMarks = TotalMarks + k
+    #print("Marks For Each Sentences" , Similarities)
+    print("Total Marks Allocated is", ((TotalMarks/len(Similarities))*7))
 
     CheckedAnswerTokenized = Tokenizer.tokenizer(CheckedAnswer)
 

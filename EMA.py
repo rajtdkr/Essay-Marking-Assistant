@@ -93,15 +93,13 @@ def HandcraftedFeatureFn(Dataset, StudentDataset):
 
 def Datasetloader():
 
-    Dataset = pd.read_excel('Dataset/Typed Dataset/4(b) Teachers Answer.xlsx', 'Sheet1')
+    Dataset = pd.read_excel('Dataset/Typed Dataset/4(c) Teachers Answer.xlsx', 'Sheet1')
     number_of_rows = len(Dataset)
-
     return Dataset
 
 def StudentDatasetLoader():
 
-    studentDataset = pd.read_excel('Dataset/Typed Dataset/4(b) completed.xlsx')
-
+    studentDataset = pd.read_excel('Dataset/Typed Dataset/4(c) completed.xlsx')
     return studentDataset
 
 if __name__ == "__main__":
