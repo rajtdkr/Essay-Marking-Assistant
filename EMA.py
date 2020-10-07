@@ -14,29 +14,31 @@ def main():
     StudentDataset = StudentDatasetLoader()
     TeachersData = loadedData.values.tolist()
     StudentData = StudentDataset.values.tolist()
-
-
     Paraphrased_Sentence = Paraphrase.wordParaphrasing(TeachersData[0][0])
     TeachersData[0][0] = str(TeachersData[0][0]) + str(Paraphrased_Sentence)
-    DeepLearningTrained = XLnetandDeepLearning(TeachersData[0][0], TeachersData[0][1])
-
-    #Input = input("Do you want to check answer? \n y for Yes and \n n for No")
+    AnswerNumber = 18
     Input = 'y'
-    AnswerNumber = 0
-    while(Input == 'y'):
+    while (Input == 'y'):
+        DeepLearningTrained = XLnetandDeepLearning(TeachersData[0][0], TeachersData[0][1])
+
+        #Input = input("Do you want to check answer? \n y for Yes and \n n for No")
 
         DeepLearningEvaluated = XLnetandDeepLearningEvaluate(DeepLearningTrained,StudentData[AnswerNumber][0])
         TFIDF_Words = TFIDF(TeachersData[0][0],StudentData[AnswerNumber][0])
         HandcraftedFeature = 0
 
-       # HandcraftedFeature = HandcraftedFeatureFn(TeachersData[0][0],StudentData[AnswerNumber][0])
+        # HandcraftedFeature = HandcraftedFeatureFn(TeachersData[0][0],StudentData[AnswerNumber][0])
         DisplayOutput.DisplayOutput(TFIDF_Words,DeepLearningEvaluated,HandcraftedFeature,StudentData[AnswerNumber][0],AnswerNumber)
-
+        TeachersData[0][0] = str(TeachersData[0][0]) + str(StudentData[AnswerNumber][0])
+        TeachersData[0][1] = TeachersData[0][1] + StudentData[AnswerNumber][1]
+        #print(TeachersData[0][0])
         AnswerNumber = AnswerNumber + 1
-        # if AnswerNumber < len(StudentData):
-        #     Input = input("Do you want to check another answer? \n y for Yes and n for No:")
-        # else:
-        #     exit()
+
+
+            # if AnswerNumber < len(StudentData):
+            #     Input = input("Do you want to check another answer? \n y for Yes and n for No:")
+            # else:
+            #     exit()
 
 
 def XLnetandDeepLearningEvaluate(DLModel_Trained,StudentData):

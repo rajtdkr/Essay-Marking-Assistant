@@ -15,7 +15,7 @@ def DisplayOutput(TFIDF,DeepLearning,HandcraftedFeatures,CheckedAnswer,AnswerNum
                 Similarities.append(k)
                 TotalMarks = TotalMarks + k
     #print("Marks For Each Sentences" , Similarities)
-    print("Total Marks Allocated is", ((TotalMarks/len(Similarities))*7))
+    print("Total Marks Allocated is", ((TotalMarks/len(Similarities))*5))
 
     CheckedAnswerTokenized = Tokenizer.tokenizer(CheckedAnswer)
 
