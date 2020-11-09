@@ -5,11 +5,8 @@ from Tokenizer import tokenizer
 spell = SpellChecker()
 
 Dataframe_Hewlett_essay = pd.read_excel('C:/Users/Raj/Desktop/UWA/Semester 3/Research project\Playing Around With Dataset/Dataset_small.xlsx','Sheet1')
-
 Dataframe_Hewlett_essay_string = Dataframe_Hewlett_essay.to_string()
-
 Dataframe_Hewlett_essay_string_lower = Dataframe_Hewlett_essay_string.lower()
-
 Tokenwords = tokenizer(Dataframe_Hewlett_essay_string)
 
 # for word in Tokenwords:

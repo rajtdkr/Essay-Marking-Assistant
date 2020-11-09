@@ -1,5 +1,5 @@
 import pandas as pd
-from XLnet import XLnet
+from XLnetandBert import XLnetandBert
 from DeepLearning import Preprocessing
 from DeepLearning import DeepLearning
 from openpyxl import load_workbook
@@ -20,7 +20,7 @@ def main():
     Input = 'y'
     while (Input == 'y'):
         DeepLearningTrained = XLnetandDeepLearning(TeachersData[0][0], TeachersData[0][1])
-
+        print(DeepLearningTrained)
         #Input = input("Do you want to check answer? \n y for Yes and \n n for No")
 
         DeepLearningEvaluated = XLnetandDeepLearningEvaluate(DeepLearningTrained,StudentData[AnswerNumber][0])
@@ -29,8 +29,8 @@ def main():
 
         # HandcraftedFeature = HandcraftedFeatureFn(TeachersData[0][0],StudentData[AnswerNumber][0])
         DisplayOutput.DisplayOutput(TFIDF_Words,DeepLearningEvaluated,HandcraftedFeature,StudentData[AnswerNumber][0],AnswerNumber)
-        TeachersData[0][0] = str(TeachersData[0][0]) + str(StudentData[AnswerNumber][0])
-        TeachersData[0][1] = TeachersData[0][1] + StudentData[AnswerNumber][1]
+        #TeachersData[0][0] = str(TeachersData[0][0]) + str(StudentData[AnswerNumber][0])
+       # TeachersData[0][1] = TeachersData[0][1] + StudentData[AnswerNumber][1]
         #print(TeachersData[0][0])
         AnswerNumber = AnswerNumber + 1
 
@@ -49,7 +49,7 @@ def XLnetandDeepLearningEvaluate(DLModel_Trained,StudentData):
     StudentSentences = StudentData.split('.')
     for i in range(0,len(StudentSentences)-1):
         if bool(StudentSentences[i].strip()) == True:
-            Students_EmbeddedData = XLnet.XLnetembeddings(StudentSentences[i])
+            Students_EmbeddedData = XLnetandBert.XLnetembeddings(StudentSentences[i])
             Marks = DLModel_Trained.predict(Students_EmbeddedData)
             StudentSentencesMarks.append(Marks)
         else:
@@ -62,7 +62,7 @@ def XLnetandDeepLearning(TeachersAnswer, Full_Marks ):
     #print("The data is Training")
     Full_Marks_List = []
     Full_Marks_List.append(Full_Marks)
-    Teachers_EmbeddedData = XLnet.XLnetembeddings(TeachersAnswer[0][0])
+    Teachers_EmbeddedData = XLnetandBert.XLnetembeddings(TeachersAnswer[0][0])
     DLModel_Trained = DeepLearning.NeuralNetsTrain(Teachers_EmbeddedData, Full_Marks_List)
     return DLModel_Trained
 
@@ -95,7 +95,9 @@ def HandcraftedFeatureFn(Dataset, StudentDataset):
 
 def Datasetloader():
 
+    #Dataset = pd.read_excel('Dataset/Typed Dataset/4(c) Teachers Answer.xlsx', 'Sheet1')
     Dataset = pd.read_excel('Dataset/Typed Dataset/4(c) Teachers Answer.xlsx', 'Sheet1')
+
     number_of_rows = len(Dataset)
     return Dataset
 

@@ -5,6 +5,7 @@ def XLnetembeddings(Answer):
 
     en = Encoder(embedding='xlnet', model='xlnet_large_cased', max_seq_length=256)
     vecs = en.encode(texts=[Answer])
+    print(vecs)
     return vecs
 
 
